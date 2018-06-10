@@ -1,0 +1,11 @@
+div.form{
+    width:400px;
+    height:400px;
+    margin: 0 auto;
+}
+textarea{
+    width:260px;
+}
+h1{
+    text-align: center;
+}

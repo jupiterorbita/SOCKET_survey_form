@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Socket survey form HOME</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.dev.js"></script>
+    <script type ="text/javascript">
+
+    $(document).ready(function(){
+        var socket = io();
+
+        $("#form").submit(function(){
+            console.log('\nclicked from data');
+            socket.emit('posting_form', { 
+                name: $('#name').val(),
+                location: $('#location').val(),
+                language: $('#language').val(),
+                textarea: $('#textarea').val()
+            });
+            return false;
+        })
+
+        socket.on('updated_message', function(message){
+            console.log('got from server', message);
+            $('#place').append('<p> you submitted the following => '+JSON.stringify(message)+'</p>');
+            
+            $('#place').append('<br> location => '+message.name);
+            $('#place').append('<br> location => '+message.location);
+            $('#place').append('<br> language => '+message.language);
+            $('#place').append('<br> textarea => '+message.textarea);
+        })
+
+        socket.on('rand_num', function(num){
+            console.log(`got ${num} from server`);
+            $('#place2').html(`server emmitted => ${num}`)
+        })
+
+    })
+    </script>
+    <style>
+        div#place{
+            background-color: rgb(24, 120, 204);
+            color:aliceblue;
+            margin: 0 auto;
+            font-size: 14pt;
+        }
+        div#place2{
+            background-color: bisque;
+        }
+    </style>
+</head>
+<body>
+    <h1>Survey Form</h1>
+    <div id="place"></div>
+    <div id="place2"></div>
+    <hr>
+    <div class="form">
+        <form id="form" action="#" method="POST">
+            name: <input id="name" type="text" name="name"/><br>
+            dojo location 
+            <select id="location" name="location">
+                <option value="sanjose">San Jose</option>
+                <option value="seattle">Seattle</option>
+                <option value="ny">NY</option>
+                <option value="moon">Moon Base X1</option>
+              </select><br>
+            fav language :
+            <select id="language" name="language">
+                <option value="cpp">C++</option>
+                <option value="python">Python</option>
+                <option value="java">Java</option>
+              </select><br>
+            comment:<br>
+            <textarea id="textarea" name='textarea'></textarea><br>
+            <input type="submit" value="submit"/>
+        </form>
+    </div>
+</body>
+</html>
